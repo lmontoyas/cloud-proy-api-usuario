@@ -1,0 +1,94 @@
+org: leomontoya
+service: api-usuarios
+
+provider:
+  name: aws
+  runtime: python3.13
+  # Default memory size for functions (default: 256MB)
+  memorySize: 1024
+  timeout: 30
+  iam:
+    role: arn:aws:iam::087688905490:role/LabRole
+  environment:
+    TABLE_NAME_USUARIOS: ${sls:stage}-tp_usuarios
+    TABLE_NAME_TOKENS_ACCESO: ${sls:stage}-tp_tokens_acceso
+
+functions:
+  crear_usuario:
+    handler: LambdaCrearUsuario.lambda_handler
+    memorySize: 1024
+    events:
+      - http:
+          path: /usuario/crear
+          method: post
+          cors: true
+          integration: lambda
+  validar_token:
+    handler: LambdaValidarTokenAcceso.lambda_handler
+    events:
+      - http:
+          path: /usuario/validar-token
+          method: post
+          cors: true
+          integration: lambda
+  login_usuario:
+    handler:  LambdaLogin.lambda_handler
+    memorySize: 1024
+    events:
+      - http:
+          path: /usuario/login
+          method: post
+          cors: true
+          integration: lambda
+  buscar_usuario:
+    handler: LambdaBuscarUsuario.lambda_handler
+    memorySize: 1024
+    events:
+      - https:
+          path: /usuario/buscar
+          method: post
+          cors: true
+          integration: lambda
+  modificar_usuario:
+    handler: LambdaModificarUsuario.lambda_handler
+    memorySize: 1024
+    events:
+      - http:
+          path: /usuario/modificar
+          method: put
+          cors: true
+          integration: lambda
+
+resources:
+  Resources:
+    TablaUsuarios:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TABLE_NAME_USUARIOS}
+        AttributeDefinitions:
+          - AttributeName: tenant_id
+            AttributeType: S
+          - AttributeName: user_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: tenant_id
+            KeyType: HASH
+          - AttributeName: user_id
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+
+    TablaTokenAccesos:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TABLE_NAME_TOKENS_ACCESO}
+        AttributeDefinitions:
+          - AttributeName: token_id
+            AttributeType: S
+          - AttributeName: tenant_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: tenant_id
+            KeyType: HASH
+          - AttributeName: token
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
