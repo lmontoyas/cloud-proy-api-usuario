@@ -82,7 +82,7 @@ resources:
       Properties:
         TableName: ${self:provider.environment.TABLE_NAME_TOKENS_ACCESO}
         AttributeDefinitions:
-          - AttributeName: token_id
+          - AttributeName: token
             AttributeType: S
           - AttributeName: tenant_id
             AttributeType: S
