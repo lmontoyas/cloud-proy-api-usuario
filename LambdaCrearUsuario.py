@@ -10,13 +10,13 @@ def hash_password(password):
 def lambda_handler(event, context):
     try:
         # Obtener el dni, password y datos del usuario
-        tenant_id = event['tenant_id']
-        user_id = event['user_id']
-        email = event['email']
-        nombre = event['nombre']
-        apell_pat = event['apell_pat']
-        apell_mat = event['apell_mat']
-        password = event['passsword']
+        tenant_id = event.get('tenant_id')
+        user_id = event.get('user_id')
+        email = event.get('email')
+        nombre = event.get('nombre')
+        apell_pat = event.get('apell_pat')
+        apell_mat = event.get('apell_mat')
+        password = event.get('passsword')
 
         if email == 'aldair.seminario@utec.edu.pe':
             rol = 'developer'
