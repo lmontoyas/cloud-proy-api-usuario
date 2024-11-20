@@ -40,7 +40,7 @@ def lambda_handler(event, context):
             
             # Conectar DynamoDB
             dynamodb = boto3.resource('dynamodb')
-            tp_usuarios = dynamodb.Table('tp_usuarios')
+            tp_usuarios = dynamodb.Table('TABLE_NAME_USUARIOS')
 
             # Almacena los datos del use en la tabla de usuarios en el dynamoSSB
             tp_usuarios.put_item(
