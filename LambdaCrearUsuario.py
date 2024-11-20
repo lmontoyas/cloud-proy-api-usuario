@@ -16,7 +16,7 @@ def lambda_handler(event, context):
         nombre = event.get('nombre')
         apell_pat = event.get('apell_pat')
         apell_mat = event.get('apell_mat')
-        password = event.get('passsword')
+        password = event.get('password')
 
         if email == 'aldair.seminario@utec.edu.pe':
             rol = 'developer'
