@@ -18,6 +18,11 @@ def lambda_handler(event, context):
         apell_mat = event['apell_mat']
         password = event['passsword']
 
+        if email == 'aldair.seminario@utec.edu.pe':
+            rol = 'developer'
+        else:
+            rol = 'client'
+
         # Verificar la existencia del email y passsword
         if tenant_id and  user_id and nombre and apell_pat and apell_mat and email and password:
             
@@ -36,7 +41,8 @@ def lambda_handler(event, context):
                     'email': email,
                     'nombre': nombre,
                     'apell_pat': apell_pat,
-                    'apell_mat': apell_mat
+                    'apell_mat': apell_mat,
+                    'rol': rol
                 }
             )
 
