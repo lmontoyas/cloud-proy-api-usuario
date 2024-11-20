@@ -1,6 +1,7 @@
 import boto3
 import hashlib
 import json
+import os
 
 # Hashear contraseña
 def hash_password(password):
@@ -32,6 +33,8 @@ def lambda_handler(event, context):
         else:
             rol = 'client'
 
+        tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
+
         # Verificar la existencia del email y passsword
         if tenant_id and user_id and nombre and apell_pat and apell_mat and email and password:
             
@@ -40,7 +43,7 @@ def lambda_handler(event, context):
             
             # Conectar DynamoDB
             dynamodb = boto3.resource('dynamodb')
-            tp_usuarios = dynamodb.Table('TABLE_NAME_USUARIOS')
+            tp_usuarios = dynamodb.Table(tabla_usuarios)
 
             # Almacena los datos del use en la tabla de usuarios en el dynamoSSB
             tp_usuarios.put_item(
