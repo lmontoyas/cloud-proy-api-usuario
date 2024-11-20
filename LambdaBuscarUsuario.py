@@ -1,5 +1,6 @@
 import boto3
 import json
+import os
 
 def lambda_handler(event, context):
     print(event)
@@ -8,6 +9,8 @@ def lambda_handler(event, context):
         # Obtener el tenant y id
         tenant_id = event['tenant_id']
         user_id = event['user_id']
+
+        tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
 
         # Validar que el tenant y user_id estén presentes
         if not tenant_id and not user_id:
@@ -41,7 +44,7 @@ def lambda_handler(event, context):
 
         # Proceso
         dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table('tp_usuarios')
+        table = dynamodb.Table(tabla_usuarios)
         response = table.get_item(
             Key={
                 'tenant_id': tenant_id,

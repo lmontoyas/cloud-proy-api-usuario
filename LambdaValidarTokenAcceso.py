@@ -1,14 +1,17 @@
 import boto3
 from datetime import datetime
+import os
 
 def lambda_handler(event, context):
     # Entrada (json)
     tenant_id = event['tenant_id']
     token = event['token']
 
+    tabla_tokens = os.environ["TABLE_NAME_TOKENS_ACCESO"]
+
     # Conectar a DynamoDB
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('tp_tokens_acceso')
+    table = dynamodb.Table(tabla_tokens)
     
     # Buscar el token en la base de datos
     response = table.get_item(

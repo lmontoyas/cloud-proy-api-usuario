@@ -2,6 +2,7 @@ import boto3
 import hashlib
 import uuid # Genera valores únicos
 from datetime import datetime, timedelta
+import os
 
 # Hashear contraseña
 def hash_password(password):
@@ -15,9 +16,12 @@ def lambda_handler(event, context):
     password = event['password']
     hashed_password = hash_password(password)
 
+    tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
+    tabla_tokens = os.environ["TABLE_NAME_TOKENS_ACCESO"]
+
     # Conectar a DynamoDB
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('tp_usuarios')
+    table = dynamodb.Table(tabla_usuarios)
     
     # Buscar al usuario por user_id
     response = table.get_item(
@@ -42,7 +46,7 @@ def lambda_handler(event, context):
     # Genera y guardar token
     token = str(uuid.uuid4())
     fecha_hora_exp = datetime.now() + timedelta(hours=24) # Token válido por 24 horas
-    token_table = dynamodb.Table('tp_tokens_acceso')
+    token_table = dynamodb.Table(tabla_tokens)
     registro = {
         'tenant_id': tenant_id,
         'token': token,
