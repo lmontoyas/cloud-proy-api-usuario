@@ -27,7 +27,7 @@ def lambda_handler(event, context):
         if tenant_id and  user_id and nombre and apell_pat and apell_mat and email and password:
             
             # Hashea la contraseña antes de almacenarla
-            hashed_password = hashed_password(password)
+            hashed_password = hash_password(password)
             
             # Conectar DynamoDB
             dynamodb = boto3.resource('dynamodb')
@@ -42,6 +42,7 @@ def lambda_handler(event, context):
                     'nombre': nombre,
                     'apell_pat': apell_pat,
                     'apell_mat': apell_mat,
+                    'password': hashed_password,
                     'rol': rol
                 }
             )
