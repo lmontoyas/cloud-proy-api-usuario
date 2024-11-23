@@ -3,6 +3,7 @@ import hashlib
 import uuid # Genera valores únicos
 from datetime import datetime, timedelta
 import os
+import json
 
 # Hashear contraseña
 def hash_password(password):
@@ -10,10 +11,19 @@ def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def lambda_handler(event, context):
-    # Entrada (json)
-    tenant_id = event['tenant_id']
-    user_id = event['user_id']
-    password = event['password']
+    # Log del evento recibido
+    print("Evento recibido:", event)
+
+    # Verificar si el cuerpo está en JSON
+    if "body" in event:
+        body = json.loads(event["body"])
+    else:
+        body = event
+
+    # Validar que se reciban los parámetros esperados
+    tenant_id = body.get('tenant_id')
+    user_id = body.get('user_id')
+    password = body.get('password')   
     hashed_password = hash_password(password)
 
     tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
