@@ -11,19 +11,16 @@ def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def lambda_handler(event, context):
-    # Log del evento recibido
-    print("Evento recibido:", event)
-
-    # Verificar si el cuerpo está en JSON
-    if "body" in event:
-        body = json.loads(event["body"])
+# Verificar y parsear el cuerpo
+    if isinstance(event['body'], str):
+        body = json.loads(event['body'])
     else:
-        body = event
+        body = event['body']  # Ya es un diccionario
 
-    # Validar que se reciban los parámetros esperados
-    tenant_id = body.get('tenant_id')
-    user_id = body.get('user_id')
-    password = body.get('password')   
+    # Extraer datos del JSON
+    tenant_id = body['tenant_id']
+    user_id = body['user_id']
+    password = body['password']
     hashed_password = hash_password(password)
 
     tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
