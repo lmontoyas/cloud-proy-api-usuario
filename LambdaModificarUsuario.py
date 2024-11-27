@@ -2,7 +2,7 @@ import boto3
 import json
 import os
 
-def lambdahandler(event, context):
+def lambda_handler(event, context):
     print(event)
     try:
         if isinstance(event['body'], str):
