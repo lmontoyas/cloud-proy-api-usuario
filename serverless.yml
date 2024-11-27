@@ -44,7 +44,7 @@ functions:
     handler: LambdaBuscarUsuario.lambda_handler
     memorySize: 1024
     events:
-      - https:
+      - http:
           path: /usuario/buscar
           method: post
           cors: true
