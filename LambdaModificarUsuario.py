@@ -14,6 +14,7 @@ def lambdahandler(event, context):
         apell_mat = event['apell_mat']
 
         tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
+        lambda_token = os.environ["LAMBDA_VALIDAR_TOKEN"]
 
         if not tenant_id and not user_id:
             return {
@@ -32,7 +33,7 @@ def lambdahandler(event, context):
         lambda_client = boto3.client('lambda')
         payload_string = json.dumps({'token': token})
         invoke_response = lambda_client.invoke(
-            FunctionName = 'ValidarTokenAcceso',
+            FunctionName = lambda_token,
             InvocationType = 'RequestResponse',
             Payload = payload_string
         )

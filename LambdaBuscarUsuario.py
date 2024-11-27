@@ -6,11 +6,17 @@ def lambda_handler(event, context):
     print(event)
 
     try:
+        # Analizar el cuerpo de la solicitud
+        body = event.get('body', {})
+        if isinstance(body, str):
+            body = json.loads(body)
+
         # Obtener el tenant y id
-        tenant_id = event['tenant_id']
-        user_id = event['user_id']
+        tenant_id = body.get('tenant_id')
+        user_id = body.get('user_id')
 
         tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
+        lambda_token = os.environ["LAMBDA_VALIDAR_TOKEN"]
 
         # Validar que el tenant y user_id estén presentes
         if not tenant_id and not user_id:
@@ -28,9 +34,13 @@ def lambda_handler(event, context):
             }
 
         lambda_client = boto3.client('lambda')
-        payload_string = json.dumps({"token": token})
+        payload_string = json.dumps(
+            {
+                "tenant_id": tenant_id,
+                "token": token
+                })
         invoke_response = lambda_client.invoke(
-            FunctionName="ValidarTokenAcceso",
+            FunctionName=lambda_token,
             InvocationType='RequestResponse',
             Payload=payload_string
         )

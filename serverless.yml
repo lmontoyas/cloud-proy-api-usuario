@@ -12,6 +12,7 @@ provider:
   environment:
     TABLE_NAME_USUARIOS: ${sls:stage}-tp_usuarios
     TABLE_NAME_TOKENS_ACCESO: ${sls:stage}-tp_tokens_acceso
+    LAMBDA_VALIDAR_TOKEN: api-usuarios-${sls:stage}-validar_token
 
 functions:
   crear_usuario:
