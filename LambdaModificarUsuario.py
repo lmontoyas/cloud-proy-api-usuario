@@ -60,7 +60,7 @@ def lambda_handler(event, context):
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table(tabla_usuarios)
         response = table.update_item(
-            key = {
+            Key = {
                 'tenant_id': tenant_id,
                 'user_id': user_id
             },
