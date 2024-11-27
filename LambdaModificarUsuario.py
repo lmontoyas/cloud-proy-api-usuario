@@ -5,13 +5,18 @@ import os
 def lambdahandler(event, context):
     print(event)
     try:
+        if isinstance(event['body'], str):
+            body = json.loads(event['body'])
+        else:
+            body = event['body']
+
         # Obtener el dni, password y datos del usuario
-        tenant_id = event['tenant_id']
-        user_id = event['user_id']
-        email = event['email']
-        nombre = event['nombre']
-        apell_pat = event['apell_pat']
-        apell_mat = event['apell_mat']
+        tenant_id = body['tenant_id']
+        user_id = body['user_id']
+        email = body['email']
+        nombre = body['nombre']
+        apell_pat = body['apell_pat']
+        apell_mat = body['apell_mat']
 
         tabla_usuarios = os.environ["TABLE_NAME_USUARIOS"]
         lambda_token = os.environ["LAMBDA_VALIDAR_TOKEN"]
@@ -31,7 +36,11 @@ def lambdahandler(event, context):
             }
         
         lambda_client = boto3.client('lambda')
-        payload_string = json.dumps({'token': token})
+        payload_string = json.dumps(
+            {
+                "tenant_id": tenant_id,
+                "token": token
+                })
         invoke_response = lambda_client.invoke(
             FunctionName = lambda_token,
             InvocationType = 'RequestResponse',
